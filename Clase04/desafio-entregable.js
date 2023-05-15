@@ -8,7 +8,7 @@ class ProductManager {
         this.incrementor = 0;
         //propiedades de los productos
         this.productKeys = ["id", "title", "description", "price", "thumbnail", "code", "stock"];
-        this.path = "./database.txt"; //this.path solicitado por la consigna
+        this.path = "./database.json"; //this.path solicitado por la consigna
     }
     //método para agregar productos al array products[]
     addProduct(newProduct) {
@@ -27,12 +27,17 @@ class ProductManager {
         this.incrementor++;
         this.products.push(newProductWId);
 
+        //si el id ya se encuentra creado, guardo el nuevo producto aparte.
+        const productToSave = this.products.find((product)=> this.incrementor == product.id);
+        if(!productToSave) return
         //escribo el nuevo archivo de database
-        fs.writeFile("./database.txt", newProductWId, (error)=>{
+        let dataProduct = JSON.stringify(newProductWId)
+        fs.writeFile(this.path, dataProduct, (error)=>{
             if(error) return console.log(error);
-            fs.readFile("./database.txt", "utf8", (error, resultado)=>{
+            fs.readFile(this.path, "utf8", (error, resultado)=>{
                 if(error) return console.log(error);
-                console.log(resultado);
+                let resultadoLeido = JSON.parse(resultado)
+                console.log(resultadoLeido);
             });
         });
         }
@@ -64,7 +69,7 @@ const productManager = new ProductManager();
     description: "roja",
     price: 12,
     stock: 199,
-    thumbnail: "link",
+    thumbnail: "link"
 });
 productManager.addProduct({
     title: "pera",
@@ -72,7 +77,7 @@ productManager.addProduct({
     description: "roja",
     price: 12,
     stock: 199,
-    thumbnail: "link",
+    thumbnail: "link"
 });
 
 console.log(productManager.getProductById(1));
