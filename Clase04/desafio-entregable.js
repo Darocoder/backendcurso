@@ -29,9 +29,9 @@ class ProductManager {
 
         //si el id ya se encuentra creado, guardo el nuevo producto aparte.
         const productToSave = this.products.find((product)=> this.incrementor == product.id);
-        if(!productToSave) return
-        //escribo el nuevo archivo de database
-        let dataProduct = JSON.stringify(newProductWId)
+        if(!productToSave) return console.log(this.products)
+        //escribo el nuevo archivo de database y luego lo leo
+        let dataProduct = JSON.stringify(this.products)
         fs.writeFile(this.path, dataProduct, (error)=>{
             if(error) return console.log(error);
             fs.readFile(this.path, "utf8", (error, resultado)=>{
@@ -44,6 +44,13 @@ class ProductManager {
 
         //devuelve el array creado hasta el momento
         getProducts() {
+        // leer el archivo de productos
+        const data = fs.readFileSync(this.path, "utf8");
+        const products = JSON.parse(data);
+        
+        // actualizar el array de productos
+        this.products = products;
+
         return this.products;
         }
 
@@ -80,7 +87,8 @@ productManager.addProduct({
     thumbnail: "link"
 });
 
-console.log(productManager.getProductById(1));
+console.log("getProductById" + productManager.getProductById(1));
 
 console.log("A continuación veremos todos los productos agregados")
 console.log(productManager)
+console.log(productManager.getProducts())
