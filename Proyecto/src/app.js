@@ -1,8 +1,21 @@
 import express from "express";
-import ProductManager from "../product_manager.js"
+import { ProductManager, Product } from "../product_manager.js"
 
 const app = express();
 const PORT = 8080;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const products = [];
+
+app.post("/api/products", (req, res) => {
+    const newProduct = new Product(req.body);
+    products.push(newProduct);
+
+    res.status(201).send("Producto agregado");
+    console.log(products)
+});
 
 
 app.get('/', (req, res) => {
@@ -16,16 +29,16 @@ app.get('/api/products', (req, res) => {
     res.send(JSON.stringify(productSlice));
 })
 
-app.get("/api/products/:id", (req, res) => {
+app.get("/api/products/:pid", (req, res) => {
     const instancia = new ProductManager();
     instancia.getProducts();
     console.log(instancia.products);
-    const id = parseInt(req.params.id); //convierto el id a número
-    if (isNaN(id)) { //si el id no es un número devuelvo el error 400
+    const pid = parseInt(req.params.pid); //convierto el id a número
+    if (isNaN(pid)) { //si el id no es un número devuelvo el error 400
         res.status(400).send("El id debe ser un número.");
         return;
     }
-    const product = instancia.getProductByID(req.params.id);
+    const product = instancia.getProductByID(req.params.pid);
     console.log("este es el product", product, req.params)
     res.send(JSON.stringify(product));
 });
