@@ -7,16 +7,6 @@ const PORT = 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const products = [];
-
-app.post("/api/products", (req, res) => {
-    const newProduct = new Product(req.body);
-    products.push(newProduct);
-
-    res.status(201).send("Producto agregado");
-    console.log(products)
-});
-
 
 app.get('/', (req, res) => {
     res.send('Esta es la hompage!')
@@ -41,6 +31,37 @@ app.get("/api/products/:pid", (req, res) => {
     const product = instancia.getProductByID(req.params.pid);
     console.log("este es el product", product, req.params)
     res.send(JSON.stringify(product));
+});
+
+app.post("/api/product", (req, res) => {
+
+    try {
+        const newProduct = new Product(req.body);
+        const pm = new ProductManager();
+        pm.getProducts(); //traigo los productos del archivo productos.json
+        pm.addProduct(newProduct);
+        res.status(201).send("Producto agregado");
+    }catch (error) {    
+        console.log(error)
+    };
+});
+
+app.put("/api/product/:pid",(req, res) => {
+    const newProduct = new Product(req.body);
+    const pm = new ProductManager();
+    pm.getProducts(); //traigo los productos del archivo productos.json
+    pm.updateProduct(req.params.pid, newProduct); //le paso el pid ingresado en la url y ejecuto el método para actualizar todas las propiedades del producto.
+    res.status(200).send("Producto actualizado");
+    
+});
+
+app.delete("/api/product/:pid",(req, res) => {
+    const pm = new ProductManager();
+    pm.getProducts(); //traigo los productos del archivo productos.json
+    pm.deleteProductByID(req.params.pid);
+    console.log(pm);
+
+    res.status(200).send("Producto eliminado")
 });
 
 app.listen(PORT, () => {
