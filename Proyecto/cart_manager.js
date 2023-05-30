@@ -15,28 +15,41 @@ export class CartProduct {
 export class CartManager {
 
     constructor(){
-        this.products= [],
+        this.carts= [];
+        this.id = 1;
         this.path = "carts.json"
     }
 
+    createCart(products = []) {
+        const cartId = this.generateCartId(); //debo crear este método!
+        const newCart = {
+            id: cartId,
+            products: products.map(productId => ({ productId, quantity: 1 }))   
+        };
+        this.carts.push(newCart);
+        console.log('Carrito creado exitosamente');
+        this.archiveCarts();
+        return newCart;
+    }
+
     getProductsFromArray(){
-        console.log("En el array tengo " + this.products.length + " productos")
-        return this.products
+        console.log("En el array tengo " + this.carts.length + " productos")
+        return this.carts
     }
 
     getProducts(){
         //console.log("Nuevo array desde fs " + this.path)
-        this.products = JSON.parse(fs.readFileSync(this.path))
-        return this.products
+        this.carts = JSON.parse(fs.readFileSync(this.path))
+        return this.carts
     }
 
     saveProducts(){
-        fs.writeFileSync(this.path, JSON.stringify(this.products))
+        fs.writeFileSync(this.path, JSON.stringify(this.carts))
     }
 
     getProductByID(id){
         let producto    
-        this.products.forEach(product => {
+        this.carts.forEach(product => {
             if(product.id == id)
             producto=product
         })
@@ -51,7 +64,7 @@ export class CartManager {
     
 
     deleteProductByID(id){
-        if (!this.products.some((product) => product.id == id )) {
+        if (!this.carts.some((product) => product.id == id )) {
             console.log ("No se encuentra el id: " + id +  ". No se ha eliminado nada.")
             return false
         }
@@ -59,7 +72,7 @@ export class CartManager {
         let nuevoArray = []
         
 
-        this.products.forEach(product => {
+        this.carts.forEach(product => {
             if(product.id != id)
                 nuevoArray.push(product)
             else
@@ -69,9 +82,9 @@ export class CartManager {
 
 
         
-        this.products = []
+        this.carts = []
         nuevoArray.forEach(product => {
-        this.products.push(product)
+        this.carts.push(product)
         console.log("me quedo con el con los productos", product)
         })
 
@@ -85,10 +98,10 @@ export class CartManager {
 
         let codigoExistente = false
         let actualizado = false
-        this.products.forEach(product => {
+        this.carts.forEach(product => {
             if(product.id == id){
                 console.log("inicio updateProduct", product);
-                this.products.forEach(x => {
+                this.carts.forEach(x => {
                     if(x.id != id){
                         if(x.code == p.code)
                             codigoExistente = true
@@ -117,19 +130,19 @@ export class CartManager {
 
     addProduct(p){
 
-        if (this.products.some((product) => product.code == p.code )) {
+        if (this.carts.some((product) => product.code == p.code )) {
             console.log ("Producto ignorado " + p.code) +  ", está repetido."
             return
         }
 
         let idDelNuevoProducto = 0
-        this.products.forEach(product => {
+        this.carts.forEach(product => {
             if(product.id > idDelNuevoProducto)
                 idDelNuevoProducto=product.id
         });
         idDelNuevoProducto++
         p.id = idDelNuevoProducto
-        this.products.push(p)
+        this.carts.push(p)
         this.saveProducts()
     }
 }
