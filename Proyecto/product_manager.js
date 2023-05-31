@@ -43,9 +43,7 @@ export class ProductManager {
         })
 
         if (producto === undefined){
-            console.log("No econtrado", id)
-        }else{
-            console.log ("Producto encontrado " + id, producto)
+            return false
         }
         return producto 
     }

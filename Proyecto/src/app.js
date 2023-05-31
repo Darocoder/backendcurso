@@ -21,16 +21,19 @@ app.get('/api/products', (req, res) => {
 })
 
 app.get("/api/products/:pid", (req, res) => {
-    const instancia = new ProductManager();
-    instancia.getProducts();
-    console.log(instancia.products);
+    const manejadorDeProductos = new ProductManager();
+    manejadorDeProductos.getProducts();
+    console.log(manejadorDeProductos.products);
     const pid = parseInt(req.params.pid); //convierto el id a número
     if (isNaN(pid)) { //si el id no es un número devuelvo el error 400
         res.status(400).send("El id debe ser un número.");
         return;
     }
-    const product = instancia.getProductByID(req.params.pid);
-    console.log("este es el product", product, req.params)
+    const product = manejadorDeProductos.getProductByID(req.params.pid);
+    if(!product) {
+        res.status(400).send("Producto no encontrado");
+        return;
+    }
     res.send(JSON.stringify(product));
 });
 
