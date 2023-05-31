@@ -1,5 +1,6 @@
 import express from "express";
 import { ProductManager, Product } from "../product_manager.js"
+import { CartManager } from "../cart_manager.js";
 
 const app = express();
 const PORT = 8080;
@@ -50,19 +51,46 @@ app.put("/api/product/:pid",(req, res) => {
     const newProduct = new Product(req.body);
     const pm = new ProductManager();
     pm.getProducts(); //traigo los productos del archivo productos.json
-    pm.updateProduct(req.params.pid, newProduct); //le paso el pid ingresado en la url y ejecuto el método para actualizar todas las propiedades del producto.
-    res.status(200).send("Producto actualizado");
-    
+    if(pm.updateProduct(req.params.pid, newProduct)) //le paso el pid ingresado en la url y ejecuto el método para actualizar todas las propiedades del producto.
+        res.status(200).send("Producto actualizado")
+    else
+        res.status(404).send("El ID no existe")
 });
 
 app.delete("/api/product/:pid",(req, res) => {
     const pm = new ProductManager();
     pm.getProducts(); //traigo los productos del archivo productos.json
-    pm.deleteProductByID(req.params.pid);
-    console.log(pm);
-
-    res.status(200).send("Producto eliminado")
+    if(pm.deleteProductByID(req.params.pid))
+        res.status(200).send("Producto eliminado")
+    else
+        res.status(404).send("No existe el producto")
 });
+
+//Endpoints del carrito:
+
+app.post("/api/cart/", (req, res) => {
+    const nc = new CartManager();
+    nc.addCart();
+    res.send(nc);
+});
+
+app.get("/api/cart/:cid", (req, res) => {
+    const ncid = new CartManager();
+    ncid.getCart();
+    if(ncid.getCartById(req.params.cid))
+        res.status(200).send(ncid)
+    else
+        res.status(500).send("No existe el carrito")
+});
+
+app.post("/api/cart/:cid/product/:pid", (req, res) => {
+    const cartId = parseInt(req.params.cid);
+    const productId = parseInt(req.params.pid);
+    const cartProd = new CartManager();
+    cartProd.addProductCart(cartId, productId);
+    res.send(cartProd);
+});
+
 
 app.listen(PORT, () => {
     console.log(`servidor en el puerto ${PORT}`)
