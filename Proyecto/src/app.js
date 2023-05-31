@@ -69,13 +69,13 @@ app.delete("/api/product/:pid",(req, res) => {
 //Endpoints del carrito:
 
 app.post("/api/cart/", (req, res) => {
-    const nc = new CartManager();
+    const nc = new CartManager("./carts.json");
     nc.addCart();
-    res.send(nc);
+    res.status(200).send(nc);
 });
 
 app.get("/api/cart/:cid", (req, res) => {
-    const ncid = new CartManager();
+    const ncid = new CartManager("./carts.json");
     ncid.getCart();
     if(ncid.getCartById(req.params.cid))
         res.status(200).send(ncid)
@@ -86,7 +86,7 @@ app.get("/api/cart/:cid", (req, res) => {
 app.post("/api/cart/:cid/product/:pid", (req, res) => {
     const cartId = parseInt(req.params.cid);
     const productId = parseInt(req.params.pid);
-    const cartProd = new CartManager();
+    const cartProd = new CartManager("./carts.json");
     cartProd.addProductCart(cartId, productId);
     res.send(cartProd);
 });
