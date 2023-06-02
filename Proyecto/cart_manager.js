@@ -1,23 +1,10 @@
 import fs from "fs";
-
-export class CartProduct {
-    constructor({title, description, price, thumbnail, code, stock}){
-        this.id = undefined
-        this.title = title 
-        this.description = description
-        this.price = price
-        this.thumbnail = thumbnail
-        this.code = code
-        this.stock = stock
-    }
-}
-
 export class CartManager {
 
-    constructor(){
+    constructor(path){
         this.carts= [];
         this.id = 1;
-        this.path = "carts.json"
+        this.path = path
     }
 
     createCart(products = []) {
@@ -37,28 +24,26 @@ export class CartManager {
         return this.carts
     }
 
-    getProducts(){
+    getCarts(){
         //console.log("Nuevo array desde fs " + this.path)
         this.carts = JSON.parse(fs.readFileSync(this.path))
         return this.carts
     }
 
-    saveProducts(){
+    saveCarts(){
         fs.writeFileSync(this.path, JSON.stringify(this.carts))
     }
 
-    getProductByID(id){
-        let producto    
-        this.carts.forEach(product => {
-            if(product.id == id)
-            producto=product
+    getCartByID(id){
+        let carrito    
+        this.carts.forEach(cart => {
+            if(cart.id == id)
+                carrito=cart
         })
 
-        if (producto === undefined){
-            console.log("No econtrado", id)
-        }else{
-            console.log ("Producto encontrado " + id, producto)
-        }
+        if (cart === undefined)
+            return false;
+        
         return producto 
     }
     

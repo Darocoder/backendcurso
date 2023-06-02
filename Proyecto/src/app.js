@@ -41,29 +41,31 @@ app.post("/api/product", (req, res) => {
 
     try {
         const newProduct = new Product(req.body);
-        const pm = new ProductManager();
-        pm.getProducts(); //traigo los productos del archivo productos.json
-        pm.addProduct(newProduct);
-        res.status(201).send("Producto agregado");
+        const manejadorDeProductos = new ProductManager();
+        manejadorDeProductos.getProducts(); //traigo los productos del archivo productos.json
+        if(manejadorDeProductos.addProduct(newProduct))
+            res.status(201).send("Producto agregado")
+        else
+            res.status(400).send("El Code ya existe")
     }catch (error) {    
-        console.log(error)
+        res.status(400).send("Error al crear el producto");
     };
 });
 
 app.put("/api/product/:pid",(req, res) => {
     const newProduct = new Product(req.body);
-    const pm = new ProductManager();
-    pm.getProducts(); //traigo los productos del archivo productos.json
-    if(pm.updateProduct(req.params.pid, newProduct)) //le paso el pid ingresado en la url y ejecuto el método para actualizar todas las propiedades del producto.
+    const manejadorDeProductos = new ProductManager();
+    manejadorDeProductos.getProducts(); //traigo los productos del archivo productos.json
+    if(manejadorDeProductos.updateProduct(req.params.pid, newProduct)) //le paso el pid ingresado en la url y ejecuto el método para actualizar todas las propiedades del producto.
         res.status(200).send("Producto actualizado")
     else
         res.status(404).send("El ID no existe")
 });
 
 app.delete("/api/product/:pid",(req, res) => {
-    const pm = new ProductManager();
-    pm.getProducts(); //traigo los productos del archivo productos.json
-    if(pm.deleteProductByID(req.params.pid))
+    const manejadorDeProductos = new ProductManager();
+    manejadorDeProductos.getProducts(); //traigo los productos del archivo productos.json
+    if(manejadorDeProductos.deleteProductByID(req.params.pid))
         res.status(200).send("Producto eliminado")
     else
         res.status(404).send("No existe el producto")
@@ -71,25 +73,27 @@ app.delete("/api/product/:pid",(req, res) => {
 
 //Endpoints del carrito:
 
+const manejadorDeCarritos = new CartManager("carts.json");
+
+
 app.post("/api/cart/", (req, res) => {
-    const nc = new CartManager("./carts.json");
-    nc.addCart();
-    res.status(200).send(nc);
+    manejadorDeCarritos.addCart();
+    res.status(200).send("Nuevo carrito creado");
 });
 
 app.get("/api/cart/:cid", (req, res) => {
-    const ncid = new CartManager("./carts.json");
-    ncid.getCart();
-    if(ncid.getCartById(req.params.cid))
-        res.status(200).send(ncid)
+    manejadorDeCarritos.getCarts();
+    let carrito = manejadorDeCarritos.getCartById(req.params.cid)
+    if(carrito)
+        res.status(200).send(carrito)
     else
-        res.status(500).send("No existe el carrito")
+        res.status(400).send("No existe el carrito")
 });
 
 app.post("/api/cart/:cid/product/:pid", (req, res) => {
     const cartId = parseInt(req.params.cid);
     const productId = parseInt(req.params.pid);
-    const cartProd = new CartManager("./carts.json");
+    const cartProd = new CartManager("carts.json");
     cartProd.addProductCart(cartId, productId);
     res.send(cartProd);
 });

@@ -111,6 +111,7 @@ export class ProductManager {
 
         console.log(actualizado?"Producto actualizado":"Error al actualizar el producto")
         return actualizado
+        
 }
     
 
@@ -118,7 +119,7 @@ export class ProductManager {
 
         if (this.products.some((product) => product.code == p.code )) {
             console.log ("Producto ignorado " + p.code) +  ", está repetido."
-            return
+            return false
         }
 
         let idDelNuevoProducto = 0
@@ -130,6 +131,7 @@ export class ProductManager {
         p.id = idDelNuevoProducto
         this.products.push(p)
         this.saveProducts()
+        return true
     }
 }
 
