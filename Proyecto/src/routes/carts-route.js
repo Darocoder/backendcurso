@@ -1,5 +1,5 @@
 import { Router } from "express";
- import { CartManager } from "../../cart_manager.js"
+ import { CartManager } from "../cart_manager.js"
 
 
 const router = Router();
@@ -13,8 +13,8 @@ router.post("/", (req, res) => {
 });
 
 router.get("/:cid", (req, res) => {
-    manejadorDeCarritos.getCarts();
-    let carrito = manejadorDeCarritos.getCartById(req.params.cid)
+    let carrito = manejadorDeCarritos.getCartByID(req.params.cid)
+    console.log("Buscando el carrito", req.params.cid, carrito)
     if(carrito)
         res.status(200).send(carrito)
     else
@@ -24,8 +24,12 @@ router.get("/:cid", (req, res) => {
 router.post("/:cid/product/:pid", (req, res) => {
     const cartId = parseInt(req.params.cid);
     const productId = parseInt(req.params.pid);
+    let quantity = req.body.quantity;
+    if(!quantity)
+        quantity = 1;
+    console.log("la cantidad es ", quantity)
     const cartProd = new CartManager("carts.json");
-    cartProd.addProductCart(cartId, productId);
+    cartProd.addProductToCart(cartId, productId, quantity);
     res.send(cartProd);
 });
 
