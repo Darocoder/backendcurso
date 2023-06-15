@@ -17,7 +17,7 @@ socket.on ("mensaje_para_todos", (data) => {
 const form = document.getElementById('formularioAgregarProducto')
 form.addEventListener('submit', e => {
     e.preventDefault()
-    console.log("Presionaron sennndddd")
+    console.log("Presionaron send")
     const product = {
         title: form.elements.title.value,
         description: form.elements.description.value,
@@ -39,7 +39,15 @@ socket.on ("actualizar_productos", (data) => {
     divQueContieneProductos.id="divQueContieneProductos"
   //  console.log("Nuevo array", data)
     data.forEach( (prod) => {
-        let contenido = prod.id + " | " + prod.title + " | " + prod.description  + " | " + prod.code  + " | " + prod.price    
+        let contenido = prod.id + " <br> ✓ " + prod.title + " <br> ✓ " + prod.description  + " <br> ✓ " + prod.code  + " <br> ✓ " + prod.price    
+        // let contenido =     <ul>
+        //                         <li>"id: "prod.id</li>
+        //                         <li>"nombre: "prod.title</li>
+        //                         <li>"descripción: "prod.description</li>
+        //                         <li>"código: "prod.code</li>
+        //                         <li>"precio: "prod.price</li>
+        //                         <li>"stock: "prod.stock</li>
+        //                     </ul>
         let linea = document.createElement("p")
         linea.innerHTML = contenido
         divQueContieneProductos.append(linea)

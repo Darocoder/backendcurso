@@ -10,16 +10,16 @@ Lo que necesitamos es atajar eso desde JS y handlearlo por nuestra cuenta.
 
 <form method="post" id="formularioAgregarProducto">
   <label>Title</label>
-  <input name="title"></input> <br>
+  <input name="title"></input> <br><br>
   
   <label>Description</label>
-  <input name="description"></input> <br>
+  <input name="description"></input> <br><br>
 
   <label>Price</label>
-  <input name="price"></input> <br>
+  <input name="price"></input> <br><br>
 
-  <label>Code (no se puede repetir)</label>
-  <input name="code"></input><br>
+  <label>Code</label>
+  <input name="code" placeholder=" no repetir códigos" ></input><br><br>
 
   <input type="submit" value="Send"></input>
 </form>
@@ -29,8 +29,6 @@ Lo que necesitamos es atajar eso desde JS y handlearlo por nuestra cuenta.
     <li>{{this.title}}</li>
     <li>{{this.description}}</li>
     <li>{{this.price}}</li>
-    <li>{{this.stock}}</li>
-    <li>{{this.thumbnail}}</li>
     <li>{{this.code}}</li>  
   </ul>
 {{/each}}
