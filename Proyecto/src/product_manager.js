@@ -1,4 +1,5 @@
 import fs from "fs";
+import {avisarQueActualizaronProductos} from "./app.js"
 
 export class Product {
     constructor({title, description, price, status, thumbnail, code, stock}){
@@ -116,7 +117,7 @@ export class ProductManager {
     
 
     addProduct(p){
-
+        this.getProducts()
         if (this.products.some((product) => product.code == p.code )) {
             console.log ("Producto ignorado " + p.code) +  ", está repetido."
             return false
@@ -129,8 +130,13 @@ export class ProductManager {
         });
         idDelNuevoProducto++
         p.id = idDelNuevoProducto
+        console.log("Antes:", this.products)
+
         this.products.push(p)
         this.saveProducts()
+        console.log("Después:", this.products)
+
+        avisarQueActualizaronProductos()
         return true
     }
 }

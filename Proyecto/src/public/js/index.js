@@ -12,3 +12,38 @@ socket.on ("mensaje_para_todos", (data) => {
     console.log("El servidor nos dijo a todos: ", data)
 }) ;
 
+// cuando hacen clic en "enviar", atajo los valores con esta función
+// que envía el producto (sin validar) al servidor
+const form = document.getElementById('formularioAgregarProducto')
+form.addEventListener('submit', e => {
+    e.preventDefault()
+    console.log("Presionaron sennndddd")
+    const product = {
+        title: form.elements.title.value,
+        description: form.elements.description.value,
+        code: form.elements.code.value,
+        price: form.elements.price.value,
+    }
+    console.log("Evento formulario", product)
+    socket.emit('solicito_agregar_producto', product)
+    form.reset()
+})
+
+// el servidor me dice que redibuje la pantalla con los productos nuevos
+socket.on ("actualizar_productos", (data) => {
+    console.log("Recibimos todos: ", data)
+    let divQueContieneProductos = document.getElementById("divQueContieneProductos")
+    if (divQueContieneProductos)
+        divQueContieneProductos.remove()
+    divQueContieneProductos = document.createElement("div")
+    divQueContieneProductos.id="divQueContieneProductos"
+  //  console.log("Nuevo array", data)
+    data.forEach( (prod) => {
+        let contenido = prod.id + " | " + prod.title + " | " + prod.description  + " | " + prod.code  + " | " + prod.price    
+        let linea = document.createElement("p")
+        linea.innerHTML = contenido
+        divQueContieneProductos.append(linea)
+    }) 
+    document.body.append(divQueContieneProductos)
+    console.log(divQueContieneProductos)
+}) ;
