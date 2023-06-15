@@ -40,14 +40,6 @@ socket.on ("actualizar_productos", (data) => {
   //  console.log("Nuevo array", data)
     data.forEach( (prod) => {
         let contenido = prod.id + " <br> ✓ " + prod.title + " <br> ✓ " + prod.description  + " <br> ✓ " + prod.code  + " <br> ✓ " + prod.price    
-        // let contenido =     <ul>
-        //                         <li>"id: "prod.id</li>
-        //                         <li>"nombre: "prod.title</li>
-        //                         <li>"descripción: "prod.description</li>
-        //                         <li>"código: "prod.code</li>
-        //                         <li>"precio: "prod.price</li>
-        //                         <li>"stock: "prod.stock</li>
-        //                     </ul>
         let linea = document.createElement("p")
         linea.innerHTML = contenido
         divQueContieneProductos.append(linea)
